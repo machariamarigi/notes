@@ -5,7 +5,7 @@ import { useUser } from "@clerk/clerk-react";
 import { PlusCircle } from "lucide-react";
 import Image from "next/image";
 
-const Dashboard = () => {
+const DashboardPage = () => {
   const { user } = useUser();
   return (
     <div className="h-full flex flex-col items-center justify-center space-y-4">
@@ -32,4 +32,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPage;
