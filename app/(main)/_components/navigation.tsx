@@ -6,9 +6,10 @@ import { usePathname } from "next/navigation";
 import React, { ElementRef, use, useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { UserItem } from "./user-item";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Item } from "./item";
+import { toast } from "sonner";
 
 export const Navigation = () => {
   const pathname = usePathname();
@@ -20,6 +21,7 @@ export const Navigation = () => {
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
 
   const documents = useQuery(api.documents.get);
+  const create = useMutation(api.documents.create);
 
   useEffect(() => {
     if (isMobile) {
@@ -102,6 +104,16 @@ export const Navigation = () => {
     }
   };
 
+  const handleCreate = async () => {
+    const promise = create({ title: "New Note" });
+
+    toast.promise(promise, {
+      loading: "Creating...",
+      success: "Note created",
+      error: "Failed to create new note",
+    });
+  };
+
   return (
     <>
       <aside
@@ -124,7 +136,7 @@ export const Navigation = () => {
         </div>
         <div>
           <UserItem />
-          <Item label="New Page" icon={PlusCircle} onClick={() => {}} />
+          <Item label="New Page" icon={PlusCircle} onClick={handleCreate} />
         </div>
         <div className="mt-4">
           {documents?.map((document) => (
