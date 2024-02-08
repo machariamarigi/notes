@@ -198,7 +198,7 @@ export const restore = mutation({
   },
 });
 
-const remove = mutation({
+export const remove = mutation({
   args: { id: v.id("documents") },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
