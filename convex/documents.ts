@@ -177,8 +177,6 @@ export const restore = mutation({
       }
     };
 
-    recursiveRestore(args.id);
-
     const options: Partial<Doc<"documents">> = {
       isArchived: false,
     };
@@ -190,9 +188,9 @@ export const restore = mutation({
       }
     }
 
-    const document = await ctx.db.patch(args.id, {
-      isArchived: false,
-    });
+    const document = await ctx.db.patch(args.id, options);
+
+    recursiveRestore(args.id);
 
     return document;
   },
@@ -237,4 +235,3 @@ export const remove = mutation({
     recursiveRemove(args.id);
   },
 });
-
