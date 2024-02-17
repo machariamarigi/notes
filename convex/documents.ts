@@ -18,6 +18,31 @@ export const get = query({
   },
 });
 
+export const getById = query({
+  args: { documentId: v.id("documents") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    const document = await ctx.db.get(args.documentId);
+
+    if (!document) {
+      throw new Error("Document not found");
+    }
+
+    if (document.isPublished && !document.isArchived) {
+      return document;
+    }
+
+    const userId = identity?.subject;
+
+    if (userId !== document.userId) {
+      throw new Error("Not authorized");
+    }
+
+    return document;
+  },
+});
+
 export const getSidebar = query({
   args: {
     parentDocument: v.optional(v.id("documents")),
@@ -64,8 +89,8 @@ export const getSearch = query({
       .collect();
 
     return documents;
-  }
-})
+  },
+});
 
 export const getTrash = query({
   handler: async (ctx) => {
