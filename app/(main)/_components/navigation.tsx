@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/popover";
 import { TrashBox } from "./trash-box";
 import { useSearch } from "@/hooks/use-search";
+import { useSettings } from "@/hooks/use-settings";
 
 export const Navigation = () => {
   const pathname = usePathname();
@@ -36,6 +37,7 @@ export const Navigation = () => {
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
   const search = useSearch();
+  const settings = useSettings();
 
   const create = useMutation(api.documents.create);
 
@@ -153,7 +155,7 @@ export const Navigation = () => {
         <div>
           <UserItem />
           <Item label="Search" icon={Search} isSearch onClick={search.onOpen} />
-          <Item label="Settings" icon={Settings} onClick={() => {}} />
+          <Item label="Settings" icon={Settings} onClick={settings.onOpen} />
           <Item label="New Page" icon={PlusCircle} onClick={handleCreate} />
         </div>
         <div className="mt-4">
