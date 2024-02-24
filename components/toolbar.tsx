@@ -8,6 +8,7 @@ import { ElementRef, useRef, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import TextAreaAutosize from "react-textarea-autosize";
+import { removeIcon } from "@/convex/documents";
 
 interface ToolbarProps {
   initialData: Doc<"documents">;
@@ -20,6 +21,7 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
   const [value, setValue] = useState(initialData.title);
 
   const update = useMutation(api.documents.update);
+  const removeIcon = useMutation(api.documents.removeIcon);
 
   const enableInput = () => {
     if (preview) return;
@@ -53,18 +55,29 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
     }
   };
 
+  const onIconSelect = (icon: string) => {
+    update({
+      id: initialData._id,
+      icon,
+    });
+  };
+
+  const onRemoveIcon = () => {
+    removeIcon({ id: initialData._id });
+  };
+
   return (
     <div className="pl-[54px] group relative">
       <div>
         {!!initialData.icon && !preview && (
           <div className="flex item-center gap-x-2 group/icon pt-6">
-            <IconPicker onChange={() => {}}>
+            <IconPicker onChange={onIconSelect}>
               <p className="text text-6xl hover opacity-75 transition">
                 {initialData.icon}
               </p>
             </IconPicker>
             <Button
-              onClick={() => {}}
+              onClick={onRemoveIcon}
               className="rounded-full opacity-0 group-hover/icon:opacity-100 transition text-muted-foreground text-xs"
             >
               <X className="h-4 w-4" />
@@ -76,7 +89,7 @@ export const Toolbar = ({ initialData, preview }: ToolbarProps) => {
         )}
         <div className="opacity-0 group-hover:opacity-100 flex items-center gap-x-1 py-4">
           {!initialData.icon && !preview && (
-            <IconPicker onChange={() => {}} asChild>
+            <IconPicker onChange={onIconSelect} asChild>
               <Button
                 className="text-muted-foreground text-xs"
                 variant="outline"
